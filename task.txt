@@ -1,0 +1,58 @@
+ແນະນຳຄິບແລ້ວສາມາດເພີ່ມຈຳນວນສິນຄ້າເຂົ້າກະຕ່າໄດ້
+ແນະນຳວ່າຄິບນີ້ຈະເພີ່ມລາຍການສິນຄ້າເຂົ້າສູ່ localstorage
+ຕ້ອງຮູ້ວ່າສິນຄ້າຢູ່ລຳດັບທີເທົ່າໃດ
+ແນະນຳການໃຊ້ value, index ໃນ cartBtn
+ທົດລອງ console.log ລຳດັບອອກ
+ທົດລອງ console.log ລາຍການເສື້ອຕາມລຳດັບ
+ສ້າງຟັງຊັ້ນ addCartItem( ລະບຸພາຣາມິຕິ ເພື່ອສົ່ງຄ່າໄປ )
+ປະກາດ localstorage  cart-item ເພື່ອເກັບຂໍ້ມູນທີ່ສົ່ງມາ
+ມັນຂຶ້ນເປັນ Object ຕ້ອງປ່ຽນເປັນ JSON
+ຂໍ້ມູນເຂົ້າໄດ້ ແຕ່ບໍ່ມີຈຳນວນ ຕ້ອງເພີ່ມຈຳນວນເຂົ້າ selectedShirst.qty=1
+ກໍລະນີຄິກອີກມັນຊໍ້າພັດບໍ່ເພີ່ມຂຶ້ນເປັນ 2
+ຕ້ອງກວດສອບວ່າມີຂໍ້ມູນໃນນັ້ນ ຫຼື ຍັງ ຖ້າມີແລ້ວໃຫ້ອັບເດດ ຖ້າຍັງແມ່ນເພີ່ມ
+ດຶງຂໍ້ມູນຈາກ localstorage ຖ້າບໍ່ເປັນ null 
+    ສັ່ງອັບເດດ ບວກຂຶ້ນ 1
+ຖ້າບໍ່ມີ
+    ສັ່ງເພີ່ມ
+
+ໃນກໍລະນີໄປຄິກໃສ່ລາຍການໃໝ່ ຂຶ້ນ qty undifined
+ສາເຫດແມ່ນມັນຍັງບໍ່ທັນມີລາຍການດັ່ງກ່າວໃນ localstorage
+
+ຕ້ອງກວດສອບວ່າຖ້າບໍ່ມີໄອດີດັ່ງກ່າວ ໃຫ້ເພີ່ມເຂົ້າພ້ອມກັບລາຍການທີ່ເຫຼືອ
+
+
+
+//set i as index
+cartBtn.forEach( (c,i) => {
+    c.addEventListener( 'click', () => {
+        addItem(); //ເພີ່ມເຂົ້າ localStorage
+        updateCart();//ອັບເດດກະຕ່າ
+
+
+        console.log(shirt[i]);//try to console.log this
+        addCartItem(shirt[i]);
+    } );
+} );
+
+
+// ຟັງຊັ້ນເພີ່ມລາຍການສິນຄ້າ 
+function addCartItem(selectedShirt){
+     let cartItem = JSON.parse(localStorage.getItem('cart-item'));
+
+    if(cartItem != null) {
+        if(cartItem[selectedShirt.id] == undefined){
+            selectedShirt.qty = 1;
+            cartItem = {
+                ...cartItem,
+                [selectedShirt.id]:selectedShirt,
+            }
+        }
+        cartItem[selectedShirt.id].qty += 1;
+    } else {
+        selectedShirt.qty = 1;
+        cartItem = {
+            [selectedShirt.id]:selectedShirt
+        }
+    }
+    localStorage.setItem('cart-item', JSON.stringify(cartItem));
+}

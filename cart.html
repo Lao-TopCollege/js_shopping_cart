@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+     <!-- Compiled and minified CSS -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+     
+</head>
+<body>
+    <div class="container">
+        <a href="index.html"><i class="material-icons left">home</i>Home</a>
+        <h1>Shopping Cart</h1>
+        <hr>
+        
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th colspan="2" style="width: 60%;">Product</th>
+                    <th style="width: 10%; text-align:right">Price</th>
+                    <th style="width: 10%;">Quantity</th>
+                    <th style="width: 20%; text-align:right">Amount</th>
+                </tr>
+            </thead>
+
+            <tbody id="cart-item-list">
+                
+            </tbody>
+        </table>
+        
+    </div>
+
+
+     <!-- Compiled and minified JavaScript -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
+<script>
+    function loadCart(){
+        let cartItem = JSON.parse( localStorage.getItem('cart-item') );
+
+        if( cartItem == null ){
+            return 0;
+        }
+
+        Object.values( cartItem ).map( item => {
+            let amount = item.price * item.qty;
+
+            let row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td><img src="${item.img}" width="50"/></td>
+
+                <td>${item.name}</td>
+
+                <td style="text-align:right;">${item.price}</td>
+
+                <td><input type="number" min="0" value="${item.qty}" onchange="updateQty(${item.id},this.value)"></td>
+
+                <td style="text-align:right;"><span id="pid-${item.id}">${amount}</span></td>
+            `;
+
+            document.querySelector('#cart-item-list').appendChild( row );
+        });
+
+        let totalCost = localStorage.getItem('total-cost');
+
+        let totalRow = document.createElement('tr');
+
+        totalRow.innerHTML = `
+           
+            <td colspan="4"><h2>Total</h2></td>
+            <td style="text-align:right;"><span id="total-cost">${totalCost}</span></td>
+            
+        `;
+
+        document.querySelector('#cart-item-list').append(totalRow);
+
+    }
+
+    loadCart();
+
+
+    //ຟັງຊັ້ນອັບເດດຈຳນວນສິນຄ້າໃນກະຕ່າ
+    function updateQty(id, val){
+        let cartItem = JSON.parse(localStorage.getItem('cart-item'));
+
+        cartItem[id].qty = parseInt(val);
+
+        localStorage.setItem( 'cart-item', JSON.stringify(cartItem) );
+
+
+        ///update amount
+        let amount = parseInt(cartItem[id].price) * parseInt(cartItem[id].qty);
+
+        document.querySelector('#pid-'+id).innerHTML = amount;
+
+        ///update total-cost
+        let totalCost = 0;
+
+        Object.values(cartItem).map(c => {
+            totalCost += parseInt(c.price) * parseInt(c.qty);
+        });
+
+        document.querySelector('#total-cost').innerHTML = totalCost;
+
+        localStorage.setItem('total-cost', totalCost);
+    }
+
+</script>
